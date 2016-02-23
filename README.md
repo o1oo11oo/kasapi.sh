@@ -16,13 +16,13 @@ Parameters:
  --no-session (-n)              Don't use/create session token for API request (default)
  --session (-s)                 Use/create session token, send request and return new token with result (if one got created)
  --token (-t)                   API session token for continuous API requests (implies --session)
- --params (-p)                  JSON formatted function parameters
+ --params (-p)                  JSON formatted function parameters (defaults to "{}")
 ```
 
 ## Example commands
 Get a list of all domains (no parameters):
 ```Bash
-kasapi.sh -f "get_domains" -p "{}"
+kasapi.sh -f "get_domains"
 ```
 
 Get a list of all DNS entries of a zone:
