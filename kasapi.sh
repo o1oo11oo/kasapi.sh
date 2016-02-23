@@ -152,7 +152,7 @@ main() {
                 ;;
 
             --no-session|-n)
-                [[ -n "${PARAM_SESSION}" ]] && _exiterr "Invalid parameter combination: --no-session can't be used with --session or --token"
+                [[ "${PARAM_SESSION}" = "yes" ]] && _exiterr "Invalid parameter combination: --no-session can't be used with --session or --token"
                 PARAM_SESSION="no"
                 ;;
 
