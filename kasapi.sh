@@ -109,8 +109,8 @@ command_api_request() {
 
     # check if request was successful
     [[ -n "${faultstring}" ]] && _exiterr "Request failed, faultstring: ${faultstring}"
-    echo "${response}"
     [[ "${return_token}" = "yes" ]] && echo "session_token: ${PARAM_TOKEN}"
+    echo "${response}"
 }
 
 main() {
