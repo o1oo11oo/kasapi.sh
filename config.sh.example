@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+# Logindata
+kas_user="w0123456"; # KAS-Login
+kas_pass="hunter2"; # KAS-Password
+#session_lifetime="1800"; # Time in seconds token is valid
+#session_update_lifetime="Y"; # N: session expires after ${session_lifetime} seconds. Y: session gets renewed with every API call
