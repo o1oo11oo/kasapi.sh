@@ -25,16 +25,16 @@ APIREQUEST='<?xml version="1.0" encoding="UTF-8"?><SOAP-ENV:Envelope xmlns:SOAP-
 session_lifetime="1800"
 session_update_lifetime="Y"
 
+_exiterr() {
+  echo "ERROR: ${1}" >&2
+  exit 1
+}
+
 # Get config
 . ${SCRIPTDIR}/config.sh
 [[ -z ${kas_user} ]] && _exiterr '${kas_user}'" not found in config."
 [[ -z ${kas_pass} ]] && _exiterr '${kas_pass}'" not found in config."
 kas_pass_hash="$(printf "%s" "${kas_pass}" | sha1sum | awk '{print $1}')"
-
-_exiterr() {
-  echo "ERROR: ${1}" >&2
-  exit 1
-}
 
 command_help() {
     local helptext
