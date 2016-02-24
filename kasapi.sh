@@ -31,14 +31,14 @@ _exiterr() {
 }
 
 # Get config
-. ${SCRIPTDIR}/config.sh
+. "${SCRIPTDIR}/config.sh"
 [[ -z ${kas_user} ]] && _exiterr '${kas_user}'" not found in config."
 [[ -z ${kas_pass} ]] && _exiterr '${kas_pass}'" not found in config."
 kas_pass_hash="$(printf "%s" "${kas_pass}" | sha1sum | awk '{print $1}')"
 
 command_help() {
     local helptext
-    read -d '' helptext <<"ENDL"
+    read -r -d '' helptext <<"ENDL"
 Usage: KASAPISH [-h] [command [argument]] [parameter [argument]] [parameter [argument]] ...
 
 Default command: help
@@ -69,9 +69,9 @@ command_login() {
     authreq="${authreq/SESSIONUPDATE/${session_update_lifetime}}"
 
     # send login request and receive session token
-    login_response=$(curl -s -X POST -H "Content-Type: text/xml" -H "SOAPAction: \"urn:xmethodsKasApiAuthentication#KasAuth\"" --data "${authreq}" ${AUTHURL})
-    session_token=$(<<<${login_response} grep -oP "(?<=<return xsi:type=\"xsd:string\">)[^<]+")
-    faultstring=$(<<<${login_response} grep -oP "(?<=<faultstring>)[^<]+")
+    login_response=$(curl -s -X POST -H "Content-Type: text/xml" -H "SOAPAction: \"urn:xmethodsKasApiAuthentication#KasAuth\"" --data "${authreq}" "${AUTHURL}")
+    session_token=$(<<<"${login_response}" grep -oP "(?<=<return xsi:type=\"xsd:string\">)[^<]+")
+    faultstring=$(<<<"${login_response}" grep -oP "(?<=<faultstring>)[^<]+")
 
     # check if login was successful
     [[ -n "${faultstring}" ]] && _exiterr "Login failed, faultstring: ${faultstring}"
@@ -107,8 +107,8 @@ command_api_request() {
     fi
 
     # send API request and receive response
-    response=$(curl -s -X POST -H "Content-Type: text/xml" -H "SOAPAction: \"urn:xmethodsKasApi#KasApi\"" --data "${apireq}" ${APIURL})
-    faultstring=$(<<<${response} grep -oPm1 "(?<=<faultstring>)[^<]+")
+    response=$(curl -s -X POST -H "Content-Type: text/xml" -H "SOAPAction: \"urn:xmethodsKasApi#KasApi\"" --data "${apireq}" "${APIURL}")
+    faultstring=$(<<<"${response}" grep -oPm1 "(?<=<faultstring>)[^<]+")
 
     # save new KasFloodDelay
     flood_delay_ms="$(echo "$(<<<"${response}" grep -oP '(?<=KasFloodDelay</key><value xsi:type="xsd:(?:int">)|(?:float">))[^<]+')*10000/10" | bc)" # use *10000/10 instead *1000 to get rid of the .0 that bc leaves even when specifying scale=0
