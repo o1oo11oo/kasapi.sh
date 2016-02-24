@@ -84,6 +84,9 @@ command_api_request() {
     [[ -z "${PARAM_FUNCTION}" ]] && _exiterr "Missing parameter: --function"
     [[ -z "${PARAM_PARAMS}" ]] && PARAM_PARAMS="{}"
 
+    # wait for KasFloodDelay
+    [[ -f "${SCRIPTDIR}/next_request_timestamp" ]] && [[ "$(<"${SCRIPTDIR}/next_request_timestamp")" -gt "$(date +%s%3N)" ]] && sleep "$(echo "scale=1; ( $(<"${SCRIPTDIR}/next_request_timestamp") - $(date +%s%3N) ) / 1000" | bc)"
+
     # build API request
     local apireq="${APIREQUEST}"
     apireq="${apireq/USER/${kas_user}}"
@@ -97,7 +100,7 @@ command_api_request() {
     else
         if [[ -z "${PARAM_TOKEN}" ]]; then
             PARAM_TOKEN="$(command_login)"
-            return_token="yes"
+            echo "session_token: ${PARAM_TOKEN}"
         fi
         apireq="${apireq/AUTHTYPE/session}"
         apireq="${apireq/AUTHDATA/${PARAM_TOKEN}}"
@@ -107,9 +110,12 @@ command_api_request() {
     response=$(curl -s -X POST -H "Content-Type: text/xml" -H "SOAPAction: \"urn:xmethodsKasApi#KasApi\"" --data "${apireq}" ${APIURL})
     faultstring=$(<<<${response} grep -oPm1 "(?<=<faultstring>)[^<]+")
 
+    # save new KasFloodDelay
+    flood_delay_ms="$(echo "$(<<<"${response}" grep -oP '(?<=KasFloodDelay</key><value xsi:type="xsd:(?:int">)|(?:float">))[^<]+')*10000/10" | bc)" # use *10000/10 instead *1000 to get rid of the .0 that bc leaves even when specifying scale=0
+    printf "%s" "$(($(date +%s%3N) + flood_delay_ms))" > "${SCRIPTDIR}/next_request_timestamp"
+
     # check if request was successful
     [[ -n "${faultstring}" ]] && _exiterr "Request failed, faultstring: ${faultstring}"
-    [[ "${return_token}" = "yes" ]] && echo "session_token: ${PARAM_TOKEN}"
     echo "${response}"
 }
 
