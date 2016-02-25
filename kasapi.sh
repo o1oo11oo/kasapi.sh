@@ -85,7 +85,10 @@ command_api_request() {
     [[ -z "${PARAM_PARAMS}" ]] && PARAM_PARAMS="{}"
 
     # wait for KasFloodDelay
-    [[ -f "${SCRIPTDIR}/next_request_timestamp" ]] && [[ "$(<"${SCRIPTDIR}/next_request_timestamp")" -gt "$(date +%s%3N)" ]] && sleep "$(awk "BEGIN {printf \"%.1f\",($(<"${SCRIPTDIR}/next_request_timestamp")-$(date +%s%3N))/1000}")"
+    if [[ -f "${SCRIPTDIR}/next_request_timestamp" && "$(<"${SCRIPTDIR}/next_request_timestamp")" -gt "$(date +%s%3N)" ]]; then
+        local diff="$(($(<"${SCRIPTDIR}/next_request_timestamp")-$(date +%s%3N)))"
+        sleep $(awk "BEGIN {printf \"%.1f\",${diff}/1000}")
+    fi
 
     # build API request
     local apireq="${APIREQUEST}"
