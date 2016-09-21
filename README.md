@@ -19,6 +19,14 @@ Parameters:
  --params (-p)                  JSON formatted function parameters (defaults to "{}")
 ```
 
+## Setup
+Copy `config.example` to `config` and enter your KAS Account details. Make sure to set the permissions accordingly!
+```Bash
+cp config.example config
+chmod 600 config
+$EDITOR config
+```
+
 ## Example commands
 Get a list of all domains (no parameters):
 ```Bash
