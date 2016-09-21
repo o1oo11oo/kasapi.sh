@@ -31,7 +31,9 @@ _exiterr() {
 }
 
 # Get config
-if [[ -f "${SCRIPTDIR}/config.sh" ]]; then
+if [[ -f "${SCRIPTDIR}/config." ]]; then
+	. "${SCRIPTDIR}/config"
+elif [[ -f "${SCRIPTDIR}/config.sh" ]]; then
 	. "${SCRIPTDIR}/config.sh"
 else
 	_exiterr "No config file found"

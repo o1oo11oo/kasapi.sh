@@ -1,5 +1,3 @@
-#!/usr/bin/env bash
-
 # Logindata
 kas_user="w0123456"; # KAS-Login
 kas_pass="hunter2"; # KAS-Password
