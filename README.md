@@ -108,4 +108,4 @@ Right now you'll get the unparsed xml back, since xml parsers are not a standard
 ```
 
 ## Other software
-Some functions and the general structure of the code come from [letsencrypt.sh](https://github.com/lukas2511/letsencrypt.sh) by [Lukas Schauer](https://github.com/lukas2511), licensed under the MIT License.
+Some functions and the general structure of the code come from [dehydrated](https://github.com/lukas2511/dehydrated) by [Lukas Schauer](https://github.com/lukas2511), licensed under the MIT License.
