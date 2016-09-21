@@ -31,7 +31,12 @@ _exiterr() {
 }
 
 # Get config
-. "${SCRIPTDIR}/config.sh"
+if [[ -f "${SCRIPTDIR}/config.sh" ]]; then
+	. "${SCRIPTDIR}/config.sh"
+else
+	_exiterr "No config file found"
+fi
+
 [[ -z ${kas_user} ]] && _exiterr '${kas_user}'" not found in config."
 [[ -z ${kas_pass} ]] && _exiterr '${kas_pass}'" not found in config."
 kas_pass_hash="$(printf "%s" "${kas_pass}" | sha1sum | awk '{print $1}')"
@@ -87,7 +92,7 @@ command_api_request() {
     # wait for KasFloodDelay
     if [[ -f "${SCRIPTDIR}/next_request_timestamp" && "$(<"${SCRIPTDIR}/next_request_timestamp")" -gt "$(date +%s%3N)" ]]; then
         local diff="$(($(<"${SCRIPTDIR}/next_request_timestamp")-$(date +%s%3N)))"
-        sleep $(awk "BEGIN {printf \"%.1f\",${diff}/1000}")
+        sleep "$(awk "BEGIN {printf \"%.1f\",${diff}/1000}")"
     fi
 
     # build API request
