@@ -31,7 +31,7 @@ _exiterr() {
 }
 
 # Get config
-if [[ -f "${SCRIPTDIR}/config." ]]; then
+if [[ -f "${SCRIPTDIR}/config" ]]; then
 	. "${SCRIPTDIR}/config"
 elif [[ -f "${SCRIPTDIR}/config.sh" ]]; then
 	. "${SCRIPTDIR}/config.sh"
