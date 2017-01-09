@@ -1,5 +1,6 @@
 # Logindata
 kas_user="w0123456"; # KAS-Login
 kas_pass="hunter2"; # KAS-Password
+#kas_pass_hash=""; # KAS-Password (UTF8 encoded) as SHA1 Hash, use this if you don't want to store the password in cleartext
 #session_lifetime="1800"; # Time in seconds token is valid
 #session_update_lifetime="Y"; # N: session expires after ${session_lifetime} seconds. Y: session gets renewed with every API call

@@ -39,9 +39,13 @@ else
 	_exiterr "No config file found"
 fi
 
-[[ -z ${kas_user} ]] && _exiterr '${kas_user}'" not found in config."
-[[ -z ${kas_pass} ]] && _exiterr '${kas_pass}'" not found in config."
-kas_pass_hash="$(printf "%s" "${kas_pass}" | sha1sum | awk '{print $1}')"
+# Verify login credentials
+[[ -z "${kas_user}" ]] && _exiterr '${kas_user}'" not found in config."
+if [[ -z "${kas_pass}" && -z "${kas_pass_hash}" ]]; then
+    _exiterr '${kas_pass} or ${kass_pass_hash}'" not found in config."
+elif [[ -z "${kas_pass_hash}" ]]; then
+    kas_pass_hash="$(printf "%s" "${kas_pass}" | sha1sum | awk '{print $1}')"
+fi
 
 command_help() {
     local helptext
