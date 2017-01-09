@@ -124,12 +124,14 @@ command_api_request() {
     response=$(curl -s -X POST -H "Content-Type: text/xml" -H "SOAPAction: \"urn:xmethodsKasApi#KasApi\"" --data "${apireq}" "${APIURL}")
     faultstring=$(<<<"${response}" grep -oPm1 "(?<=<faultstring>)[^<]+")
 
+    # check if request was successful
+    [[ -n "${faultstring}" ]] && _exiterr "Request failed, faultstring: ${faultstring}"
+
     # save new KasFloodDelay
     flood_delay_ms="$(awk "BEGIN {printf \"%.0f\",$(<<<"${response}" grep -oP '(?<=KasFloodDelay</key><value xsi:type="xsd:(?:int">)|(?:float">))[^<]+')*1000}")"
     printf "%s" "$(($(date +%s%3N) + flood_delay_ms))" > "${SCRIPTDIR}/next_request_timestamp"
 
-    # check if request was successful
-    [[ -n "${faultstring}" ]] && _exiterr "Request failed, faultstring: ${faultstring}"
+    # return response
     echo "${response}"
 }
 
