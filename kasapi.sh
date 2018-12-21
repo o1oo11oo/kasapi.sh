@@ -35,9 +35,14 @@ if [[ -f "${SCRIPTDIR}/config" ]]; then
 	. "${SCRIPTDIR}/config"
 elif [[ -f "${SCRIPTDIR}/config.sh" ]]; then
 	. "${SCRIPTDIR}/config.sh"
-else
-	_exiterr "No config file found"
 fi
+
+# Look for env variables
+[[ -n "${KASAPI_USER}" ]] && kas_user="${KASAPI_USER}"
+[[ -n "${KASAPI_PASS}" ]] && kas_pass="${KASAPI_PASS}"
+[[ -n "${KASAPI_PASS_HASH}" ]] && kas_pass_hash="${KASAPI_PASS_HASH}"
+[[ -n "${KASAPI_SESSION_LIFETIME}" ]] && session_lifetime="${KASAPI_SESSION_LIFETIME}"
+[[ -n "${KASAPI_SESSION_UPDATE_LIFETIME}" ]] && session_update_lifetime="${KASAPI_SESSION_UPDATE_LIFETIME}"
 
 # Verify login credentials
 [[ -z "${kas_user}" ]] && _exiterr '${kas_user}'" not found in config."
